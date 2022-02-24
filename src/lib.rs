@@ -199,9 +199,6 @@ mod tests {
 		let p = Integer::from(383);
 		let n = Integer::from(191);
 		let two = Integer::from(2);
-		let seed = Integer::from(240);
-		let mut rand = RandState::new_mersenne_twister();
-		rand.seed(&seed);
 		for i in 0..100 {
 			// let num = gen_bigint_range(&mut rand, &two, &n);
 			let num = Integer::from(57);
