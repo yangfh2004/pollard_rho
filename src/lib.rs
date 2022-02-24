@@ -1,21 +1,17 @@
-mod random_range;
-
+mod utils;
+pub mod generic;
 // import local package.
-use crate::random_range::gen_bigint_range;
+use crate::utils::gen_bigint_range;
 // use external crates.
 use rug::{rand::RandState, Complete, Integer};
 use std::fmt;
 
-// type alias for mapping result.
-type MapResult<T> = std::result::Result<T, MappingError>;
+use crate::generic::{MapResult, MappingError};
 /// Source: Handbook of Applied Cryptography chapter-3
 ///         http://cacr.uwaterloo.ca/hac/about/chap3.pdf
 /// rust programming by yangfh2004, January 2022
 
 const BIG_INT_0: Integer = Integer::ZERO;
-
-#[derive(Debug, Clone)]
-pub struct MappingError;
 
 impl fmt::Display for MappingError {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -23,7 +19,6 @@ impl fmt::Display for MappingError {
 	}
 }
 
-/// This function represents: x_(i+1) = func_f(x_i)
 fn func_f(x_i: &Integer, base: &Integer, y: &Integer, p: &Integer) -> MapResult<Integer> {
 	match x_i.mod_u(3) {
 		0 => Ok(Integer::from(x_i.pow_mod_ref(&Integer::from(2), p).unwrap())),
@@ -33,7 +28,6 @@ fn func_f(x_i: &Integer, base: &Integer, y: &Integer, p: &Integer) -> MapResult<
 	}
 }
 
-/// This function represents: a_(i+1) = func_g(a_i, x_i)
 fn func_g(a: &Integer, n: &Integer, x_i: &Integer) -> MapResult<Integer> {
 	match x_i.mod_u(3) {
 		0 => Ok(Integer::from(a * 2).div_rem_euc_ref(n).complete().1),
@@ -43,7 +37,6 @@ fn func_g(a: &Integer, n: &Integer, x_i: &Integer) -> MapResult<Integer> {
 	}
 }
 
-/// This function represents: b_(i+1) = func_g(b_i, x_i)
 fn func_h(b: &Integer, n: &Integer, x_i: &Integer) -> MapResult<Integer> {
 	match x_i.mod_u(3) {
 		0 => Ok(Integer::from(b * 2).div_rem_euc_ref(n).complete().1),
@@ -69,7 +62,7 @@ fn func_h(b: &Integer, n: &Integer, x_i: &Integer) -> MapResult<Integer> {
 /// This equation will have multiple solutions out of which only one
 /// will be the actual solution
 
-fn eqs_solvers(
+pub fn eqs_solvers(
 	a1: &Integer,
 	b1: &Integer,
 	a2: &Integer,
