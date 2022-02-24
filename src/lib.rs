@@ -62,7 +62,7 @@ fn func_h(b: &Integer, n: &Integer, x_i: &Integer) -> MapResult<Integer> {
 /// This equation will have multiple solutions out of which only one
 /// will be the actual solution
 
-fn eqs_solvers(
+pub fn eqs_solvers(
 	a1: &Integer,
 	b1: &Integer,
 	a2: &Integer,
